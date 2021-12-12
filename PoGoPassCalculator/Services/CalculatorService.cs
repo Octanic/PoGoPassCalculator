@@ -45,6 +45,11 @@ namespace PoGoPassCalculator.Services
             //Get comparison results
             result.PassQuantityComparison = getBundleComparison(result);
 
+            //If every bundleId is -1, so there is no advantage here. So it's indifferent.
+            if (result.PassQuantityComparison.All(x => x.BestBundleId == -1))
+            {
+                result.BestBundle = null;
+            }
             return result;
         }
 
@@ -87,6 +92,8 @@ namespace PoGoPassCalculator.Services
                     comparisons.Add(comparison);
                 }
             }
+
+           
 
             return comparisons;
         }
