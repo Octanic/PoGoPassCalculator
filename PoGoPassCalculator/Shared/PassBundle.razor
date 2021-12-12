@@ -1,0 +1,42 @@
+﻿<div class="bundle-item @(IsBest??false?"best-value":"")">
+
+    @if (ShowRemove)
+    {
+        <span class="remove-button" @onclick="OnRemove">X</span>
+    }
+
+    <img src="/img/@(type).png" width="128" class="big-image" />
+
+    <p>
+        <img src="/img/coin.png" /> @Bundle.Value Moedas
+    </p>
+    <p>
+        <img src="/img/@(type).png" /> x @Bundle.PassQuantity
+    </p>
+    @if (IsBest ?? false)
+    {
+        <span class="best-value">Melhor valor</span>
+    }
+</div>
+
+@code {
+    private string type
+    {
+        get
+        {
+            return Bundle?.PassType.ToString();
+        }
+    }
+
+    [Parameter]
+    public Bundle Bundle { get; set; }
+
+    [Parameter]
+    public bool? IsBest { get; set; }
+
+    [Parameter]
+    public EventCallback OnRemove { get; set; }
+
+    [Parameter]
+    public bool ShowRemove { get; set; }
+}

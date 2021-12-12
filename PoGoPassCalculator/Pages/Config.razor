@@ -1,0 +1,90 @@
+﻿@page "/config"
+@inject CalculatorConfiguration Configuration
+@implements IDisposable
+
+<h3>Configurações</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-sm-12">
+            <div class="form-group">
+                <label>Valor Unitário do pacote de moedas</label>
+                <input type="tel" @bind="Configuration.Meta_UnitCost" class="form-control" />
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <div class="form-group">
+                <label>Moedas recebidas no pacote</label>
+                <input type="tel" @bind="Configuration.Meta_CoinsReceivedByUnit" class="form-control" />
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <div class="form-group">
+                <label>Moeda</label>
+                <input @bind="Configuration.Meta_Currency" class="form-control" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <h4>Pacotes:</h4>
+    <div>
+        <BundleCollection Bundles="Configuration.BundlesToCompare" ShowRemove="true"></BundleCollection>
+    </div>
+</div>
+
+<EditForm class="wrapper" Model="configBundle">
+    <h4>Criar Novo Pacote</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label class="col-form-label">Tipo do passe</label>
+                    <select class="form-control" @bind="configBundle.PassType">
+                        <option value="Remoto">Passe Remoto</option>
+                        <option value="Premium">Passe Premium</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label>Quantidade de passes</label>
+                    <input class="form-control" type="tel" @bind="configBundle.PassQuantity" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label>Valor em Pokécoins</label>
+                    <input class="form-control" type="tel" @bind="configBundle.Value" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <button class="btn btn-info" @onclick="gravar">Gravar novo</button>
+</EditForm>
+
+
+@code {
+    private Bundle configBundle = new Bundle();
+
+    void gravar()
+    {
+        if (Configuration.BundlesToCompare == null) Configuration.BundlesToCompare = new List<Bundle>();
+
+        Configuration.BundlesToCompare.Add(configBundle);
+        configBundle = new Bundle();
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        Configuration.OnChange += StateHasChanged;
+        return base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        Configuration.OnChange -= StateHasChanged;
+    }
+}

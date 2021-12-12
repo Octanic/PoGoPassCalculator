@@ -1,0 +1,32 @@
+﻿<div class="bundle-collection">
+    @if (!(Bundles?.Any() ?? false))
+    {
+        <div>
+            <p>Nenhum pacote de passe configurado. Acesse as <a href="/config">Configurações</a>.</p>
+        </div>
+    }
+    else
+    {
+
+        @foreach (var bundle in Bundles ?? Array.Empty<Bundle>())
+        {
+            <PassBundle Bundle="bundle" OnRemove="async () => await Remove(bundle)" ShowRemove="ShowRemove"></PassBundle>
+        }
+    }
+
+</div>
+
+@code {
+
+    [Parameter]
+    public IList<Bundle> Bundles { get; set; }
+    
+    [Parameter]
+    public bool ShowRemove { get; set; }
+
+
+    public async Task Remove(Bundle bundle)
+    {
+        await Task.Run(() => Bundles.Remove(bundle));
+}
+}

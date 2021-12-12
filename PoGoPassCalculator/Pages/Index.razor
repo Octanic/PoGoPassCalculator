@@ -1,0 +1,183 @@
+﻿@page "/"
+
+@using PoGoPassCalculator.Services
+@using PoGoPassCalculator.Models
+
+@implements IDisposable
+
+@inject CalculatorService Service
+@inject CalculatorConfiguration Config
+
+<h1>Calculadora de Passes</h1>
+
+<h2>Compare pacotes do Pokémon GO para saber qual é o que dá mais retorno.</h2>
+
+@if (!Config.BundlesToCompare?.Any() ?? true)
+{
+    <div class="jumbotron">
+        <h4>Acesse as <a href="/config">Configurações</a> para criar os pacotes</h4>
+    </div>
+}
+else
+{
+    @if (analysisResult == null)
+    {
+        <h4>Pacotes disponíveis</h4>
+        <BundleCollection Bundles="Config.BundlesToCompare" ShowRemove="false"></BundleCollection>
+
+        <hr />
+
+        <h4>Como deseja calcular:</h4>
+        <select class="form-control" @bind="selectionType">
+            <option value="@SelectionType.Money">Dinheiro</option>
+            <option value="@SelectionType.Coin">Pokécoin</option>
+        </select>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">
+                <h3 class="alert-heading">Erro</h3>
+                <p>@errorMessage</p>
+            </div>
+        }
+
+
+        @if (selectionType == SelectionType.Coin)
+        {
+            <div class="form-group">
+                <label for="txtMoney">Tenho Pokécoins:</label>
+                <input type="tel" class="form-control" id="txtMoney" @bind-value="Config.CoinsProduced" />
+            </div>
+        }
+        else if (selectionType == SelectionType.Money)
+        {
+            <div class="form-group">
+                <label for="txtMoney">@Config.Meta_Currency investido:</label>
+                <input type="tel" class="form-control" id="txtMoney" @bind-value="Config.InvestedValue" />
+            </div>
+        }
+        else
+        {
+            <h4>Escolha uma forma de calcular acima.</h4>
+        }
+
+        <button class="btn btn-info" @onclick="Calcular">Calcular</button>
+
+    }
+    else
+    {
+        <div class="jumbotron">
+            <div class="container">
+                <h3>Resultado da análise</h3>
+                <p>
+                    Melhor pacote para compra:
+                    @if (bestBundle == null)
+                    {
+                        <b>Indiferente.</b>
+                    }
+                    else
+                    {
+                        <div>O pacote @(bestBundle.BundleId), que custa @(bestBundle.Value) pokécoins e te dá @(bestBundle.ReceivedPasses) passes do tipo @bestBundle.PassType.</div>
+
+                    }
+                </p>
+                <p>
+                    <h4><strong>Por que?</strong></h4>
+                </p>
+                <p>
+                    @if (bestBundle == null)
+                    {
+                        <div>Porque os pacotes darão a mesma quantidade de passes com o valor investido.</div>
+                    }
+                    else
+                    {
+                        <div>
+                            Veja o comparativo:
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Comparação #</td>
+                                        <td>Pacote 1</td>
+                                        <td>Pacote 2</td>
+                                        <td>Análise</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var comparison in analysisResult.PassQuantityComparison)
+                                    {
+                                        <tr>
+                                            <td>@(++analysisCount)</td>
+                                            <td>
+                                                <PassBundle Bundle="comparison.BundleA" IsBest="comparison.BestBundleId==comparison.BundleA.BundleId"></PassBundle>
+                                            </td>
+                                            <td>
+                                                <PassBundle Bundle="comparison.BundleB" IsBest="comparison.BestBundleId==comparison.BundleB.BundleId"></PassBundle>
+                                            </td>
+                                            <td>
+                                                @if (comparison.BestBundleId == -1)
+                                                {
+                                                    <span>Não existe diferença aqui.</span>
+                                                }
+                                                else
+                                                {
+                                            <span>Existe uma diferença de @comparison.PassDifference passes.</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </p>
+                <button class="btn btn-info" @onclick="Reset">Voltar</button>
+
+            </div>
+        </div>
+    }
+}
+@code
+{
+    string errorMessage { get; set; }
+    enum SelectionType { Money, Coin }
+    private SelectionType selectionType { get; set; }
+
+    private Bundle bestBundle { get; set; }
+    private AnalysisResult analysisResult { get; set; }
+    private int analysisCount;
+
+    async Task Calcular()
+    {
+        analysisCount = 0;
+        errorMessage = string.Empty;
+
+        if (Config.CoinsProduced == 0 && Config.InvestedValue == 0)
+        {
+            errorMessage = "Insira o valor investido ou a quantidade em pokécoins que você tem";
+            return;
+        }
+
+        var result = await Task.Run(() => Service.CalculateBundles(Config));
+
+        bestBundle = result.BestBundle;
+        analysisResult = result;
+    }
+
+    void Reset()
+    {
+        analysisCount = 0;
+        analysisResult = null;
+        bestBundle = null;
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        Config.OnChange += StateHasChanged;
+        return base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        Config.OnChange -= StateHasChanged;
+    }
+}
