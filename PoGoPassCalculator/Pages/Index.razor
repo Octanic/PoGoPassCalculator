@@ -7,7 +7,7 @@
 
 @inject CalculatorService Service
 @inject CalculatorConfiguration Config
-
+@inject IJSRuntime JS
 <h1>Calculadora de Passes</h1>
 
 <h2>Compare pacotes do Pokémon GO para saber qual é o que dá mais retorno.</h2>
@@ -153,6 +153,7 @@ else
         </div>
     }
 }
+
 @code
 {
     string errorMessage { get; set; }
@@ -162,6 +163,7 @@ else
     private Bundle bestBundle { get; set; }
     private AnalysisResult analysisResult { get; set; }
     private int analysisCount;
+
 
     async Task Calcular()
     {
@@ -197,4 +199,13 @@ else
     {
         Config.OnChange -= StateHasChanged;
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            await JS.InvokeVoidAsync("scrollTop", null);
+        }
+    }
 }
+
