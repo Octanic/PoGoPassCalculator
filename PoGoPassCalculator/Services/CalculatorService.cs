@@ -60,6 +60,11 @@ namespace PoGoPassCalculator.Services
             {
                 for (int j = 1; j < bundles.Count(); j++)
                 {
+                    if (bundles[i].BundleId == bundles[j].BundleId)
+                    {
+                        continue;
+                    }
+
                     BundleComparison comparison = new BundleComparison()
                     {
                         BundleA = bundles[i],

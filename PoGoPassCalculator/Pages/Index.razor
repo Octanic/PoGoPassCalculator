@@ -11,7 +11,7 @@
 <h1>Calculadora de Passes</h1>
 
 <h2>Compare pacotes do Pokémon GO para saber qual é o que dá mais retorno.</h2>
-
+<br />
 @if (!Config.BundlesToCompare?.Any() ?? true)
 {
     <div class="jumbotron">
@@ -66,73 +66,88 @@ else
     }
     else
     {
-        <div class="jumbotron">
-            <div class="container">
-                <h3>Resultado da análise</h3>
-                <p>
-                    Melhor pacote para compra:
-                    @if (bestBundle == null)
-                    {
-                        <b>Indiferente.</b>
-                    }
-                    else
-                    {
-                        <div>O pacote @(bestBundle.BundleId), que custa @(bestBundle.Value) pokécoins e te dá @(bestBundle.ReceivedPasses) passes do tipo @bestBundle.PassType.</div>
+        <div class="container">
+            <h3>Resultado da análise</h3>
+            <p>
+                <h4>Melhor pacote para compra:</h4>
+                @if (bestBundle == null)
+                {
+                    <b>Indiferente.</b>
+                }
+                else
+                {
+                    <div>O pacote @(bestBundle.BundleId), que custa @(bestBundle.Value) pokécoins e te daria @(bestBundle.ReceivedPasses) passes do tipo @bestBundle.PassType com as @Config.CoinsProduced moedas que você teria.</div>
 
-                    }
-                </p>
-                <p>
-                    <h4><strong>Por que?</strong></h4>
-                </p>
-                <p>
-                    @if (bestBundle == null)
+                }
+                <h5>Fatos:</h5>
+                <ul>
+                    <li>Moedas recebidas: @Config.CoinsProduced</li>
+                    @if (Config.InvestedValue > 0)
                     {
-                        <div>Porque os pacotes darão a mesma quantidade de passes com o valor investido.</div>
+                        <li>Troco: @Config.Meta_Currency @string.Format("{0:N2}", Config.SpareMoney)</li>
                     }
-                    else
-                    {
-                        <div>
-                            Veja o comparativo:
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Comparação #</td>
-                                        <td>Pacote 1</td>
-                                        <td>Pacote 2</td>
-                                        <td>Análise</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var comparison in analysisResult.PassQuantityComparison)
-                                    {
-                                        <tr>
-                                            <td>@(++analysisCount)</td>
-                                            <td>
-                                                <PassBundle Bundle="comparison.BundleA" IsBest="comparison.BestBundleId==comparison.BundleA.BundleId"></PassBundle>
-                                            </td>
-                                            <td>
-                                                <PassBundle Bundle="comparison.BundleB" IsBest="comparison.BestBundleId==comparison.BundleB.BundleId"></PassBundle>
-                                            </td>
-                                            <td>
+                </ul>
+            </p>
+            <p>
+                <h4><strong>Por que?</strong></h4>
+            </p>
+            <p>
+                @if (bestBundle == null)
+                {
+                    <div>Porque os pacotes darão a mesma quantidade de passes com o valor investido.</div>
+
+                }
+                else
+                {
+                    <div>
+                        Veja o comparativo:
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>Comparação #</td>
+                                    <td>Pacote A</td>
+                                    <td>Pacote B</td>
+                                    <td>Análise</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var comparison in analysisResult.PassQuantityComparison)
+                                {
+                                    <tr class="@(bestBundle.BundleId==comparison.BestBundleId?"best-of-all":string.Empty)">
+                                        <td>@comparison.BundleA.BundleId vs @comparison.BundleB.BundleId</td>
+                                        <td>
+                                            <PassBundle Bundle="comparison.BundleA" IsBest="comparison.BestBundleId==comparison.BundleA.BundleId"></PassBundle>
+                                        </td>
+                                        <td>
+                                            <PassBundle Bundle="comparison.BundleB" IsBest="comparison.BestBundleId==comparison.BundleB.BundleId"></PassBundle>
+                                        </td>
+                                        <td>
+                                            <ul>
                                                 @if (comparison.BestBundleId == -1)
                                                 {
-                                                    <span>Não existe diferença aqui.</span>
+                                                    <li>Não existe diferença aqui.</li>
                                                 }
                                                 else
                                                 {
-                                            <span>Existe uma diferença de @comparison.PassDifference passes.</span>
+                                                    <li>Existe uma diferença de @comparison.PassDifference passes em favor do pacote @comparison.BestBundleId</li>
                                                 }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </p>
-                <button class="btn btn-info" @onclick="Reset">Voltar</button>
+                                                <li>
+                                                    Sobram @comparison.BundleA.RemainingCoins moedas com o Pacote 1.
+                                                </li>
+                                                <li>
+                                                    Sobram @comparison.BundleB.RemainingCoins moedas com o pacote 2.
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </p>
+            <button class="btn btn-info" @onclick="Reset">Voltar</button>
 
-            </div>
         </div>
     }
 }
