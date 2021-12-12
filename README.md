@@ -1,5 +1,5 @@
 # PoGoPassCalculator
-Small project to try Blazor Web Assembly skills. So I took my (calculator I made in Google Spreadsheets)[https://docs.google.com/spreadsheets/d/1nIKa1sC6rhStHq8cxS3CcWNlQPINuD_GCOGycqA-l6I] and turned it into this web application using Blazor, just to help me understanding how it works.
+Small project to try Blazor Web Assembly skills. So I took my [calculator I made in Google Spreadsheets](https://docs.google.com/spreadsheets/d/1nIKa1sC6rhStHq8cxS3CcWNlQPINuD_GCOGycqA-l6I) and turned it into this web application using Blazor, just to help me understanding how it works.
 
 # What's this?
 It is a calculator for checking which raid pass bundle is worthier on Pokémon GO, given a money or PokéCoin amount.
