@@ -238,4 +238,6 @@ span.best-value {
     background: #d2ffd2;
 }
 
-   
+html {
+    scroll-behavior: smooth;
+}
