@@ -6,6 +6,8 @@ It is a calculator for checking which raid pass bundle is worthier on Pokémon G
 
 You can check it working here: https://61b6518ee9e47a00082ea46e--pensive-mayer-46d75c.netlify.app/
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/904376d5-75f5-4953-9a14-861f3e351ed7/deploy-status)](https://app.netlify.com/sites/pogopasscalc/deploys)
+
 # Some remarks
 - There are two raid pass bundle already configured.
 - But you can do your own using the settings page.
