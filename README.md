@@ -10,7 +10,7 @@ You can check it working here: https://pogopasscalc.netlify.app/
 
 # Some remarks
 - There are two raid pass bundle already configured.
-- But you can do your own using the settings page.
+- But you can make your own using the settings page.
 - If you refresh the page, everything goes boom - I'm just keeping your inserted bundles in memory
   - because I don't need the overkill of having a small database
   - and I don't want to place it on local storage. (perhaps I shall do it eventually if I see it becomes an issue)
