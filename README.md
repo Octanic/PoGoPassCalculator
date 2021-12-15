@@ -4,7 +4,7 @@ Small project to try Blazor Web Assembly skills. So I took my [calculator I made
 # What's this?
 It is a calculator for checking which raid pass bundle is worthier on Pokémon GO, given a money or PokéCoin amount.
 
-You can check it working here: https://61b6518ee9e47a00082ea46e--pensive-mayer-46d75c.netlify.app/
+You can check it working here: https://pogopasscalc.netlify.app/
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/904376d5-75f5-4953-9a14-861f3e351ed7/deploy-status)](https://app.netlify.com/sites/pogopasscalc/deploys)
 
