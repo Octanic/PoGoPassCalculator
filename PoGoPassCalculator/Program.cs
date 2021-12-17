@@ -26,7 +26,7 @@ namespace PoGoPassCalculator
             var app = builder.Build();
 
             var singleton = app.Services.GetService<CalculatorConfiguration>();
-            singleton.Message = "O pacote especial de Natal está aplicado.";
+            singleton.Message = "O pacote especial de Natal foi aplicado.";
             singleton.BundlesToCompare = new List<Bundle>()
             {
                 new Bundle(){ PassQuantity=18, PassType = Bundle.BundlePassType.Premium, Value = 1480},
