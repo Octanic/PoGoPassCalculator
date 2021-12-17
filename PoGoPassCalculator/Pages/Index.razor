@@ -25,7 +25,7 @@ else
         <h4>Pacotes disponíveis</h4>
         @if (!string.IsNullOrWhiteSpace(Config.Message))
         {
-            <small><b>Aviso: </b>@Config.Message</small>
+            <small><b>Aviso:</b> @Config.Message</small>
         }
 
         <BundleCollection Bundles="Config.BundlesToCompare" ShowRemove="false"></BundleCollection>
