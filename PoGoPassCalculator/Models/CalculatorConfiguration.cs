@@ -99,6 +99,8 @@ namespace PoGoPassCalculator.Models
         public event Action OnChange;
 
         private void notifyStateChanged() => OnChange?.Invoke();
+
+        public string Message { get; set; }
     }
 
 }
